@@ -1,0 +1,16 @@
+import = [
+  # uncomment the flavour you want below:
+  # "~/.config/alacritty/catppuccin-latte.toml"
+  "~/.config/alacritty/catppuccin-frappe.toml"
+  # "~/.config/alacritty/catppuccin-macchiato.toml"
+  # "~/.config/alacritty/catppuccin-mocha.toml"
+]
+
+[font]
+  normal = { family = "FiraMono Nerd Font" }
+  size = 18.0
+
+[window]
+  opacity = 0.67
+  # fullscreen = true
+  dimensions = { columns = 120, lines = 30 }
