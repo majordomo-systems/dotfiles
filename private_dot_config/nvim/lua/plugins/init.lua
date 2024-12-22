@@ -12,6 +12,21 @@ return {
       require "configs.lspconfig"
     end,
   },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    lazy = false, -- Load it during startup
+    config = function()
+      require("ibl").setup({
+        indent = {
+          char = "▏", -- The character for indent lines
+        },
+        exclude = {
+          filetypes = { "help", "dashboard", "NvimTree", "packer" }, -- Exclude specific filetypes
+          buftypes = { "terminal", "nofile" }, -- Exclude specific buffer types
+        },
+      })
+    end,
+  },
   -- vim-visual-multi
   -- https://github.com/mg979/vim-visual-multi
   {
@@ -33,7 +48,7 @@ return {
     opts = {
       bigfile = { enabled = true },
       dashboard = { enabled = true },
-      indent = { enabled = true },
+      indent = { enabled = false },
       input = { enabled = true },
       notifier = {
         enabled = true,
@@ -165,33 +180,38 @@ return {
   },
   -- Catppuccin for (Neo)vim
   -- https://github.com/catppuccin/nvim
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-  -- Poimandres for (Neo)vim
+  -- { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  -- -- Poimandres for (Neo)vim
   -- https://github.com/olivercederborg/poimandres.nvim
+  {
+    'olivercederborg/poimandres.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require('poimandres').setup {
+        -- leave this setup function empty for default config
+        -- or refer to the configuration section
+        -- for configuration options
+        bold_vert_split = false, -- use bold vertical separators
+        dim_nc_background = false, -- dim 'non-current' window backgrounds
+        disable_background = false, -- disable background
+        disable_float_background = false, -- disable background for floats
+        disable_italics = false, -- disable italics
+      }
+    end,
+
+    -- optionally set the colorscheme within lazy config
+    -- init = function()
+    --   vim.cmd("colorscheme poimandres")
+    -- end
+  },
   -- {
-  --   'olivercederborg/poimandres.nvim',
-  --   lazy = false,
-  --   priority = 1000,
-  --   config = function()
-  --     require('poimandres').setup {
-  --       -- leave this setup function empty for default config
-  --       -- or refer to the configuration section
-  --       -- for configuration options
-  --     }
-  --   end,
-  --
-  --   -- optionally set the colorscheme within lazy config
-  --   init = function()
-  --     vim.cmd("colorscheme poimandres")
-  --   end
-  -- },
-  -- -- {
   -- 	"nvim-treesitter/nvim-treesitter",
   -- 	opts = {
   -- 		ensure_installed = {
   -- 			"vim", "lua", "vimdoc",
   --      "html", "css"
   -- 		},
-  -- 	},
+  -- },
   -- },
 }
