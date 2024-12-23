@@ -205,13 +205,51 @@ return {
     --   vim.cmd("colorscheme poimandres")
     -- end
   },
-  -- {
-  -- 	"nvim-treesitter/nvim-treesitter",
-  -- 	opts = {
-  -- 		ensure_installed = {
-  -- 			"vim", "lua", "vimdoc",
-  --      "html", "css"
-  -- 		},
-  -- },
-  -- },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    event = "BufReadPost",
+    config = function()
+      require("nvim-treesitter.configs").setup {
+        -- List of common languages
+        ensure_installed = {
+          "bash",         -- Shell scripting
+          "c",            -- C language
+          "cpp",          -- C++
+          "css",          -- CSS
+          "dockerfile",   -- Dockerfiles
+          "go",           -- Go language
+          "html",         -- HTML
+          "java",         -- Java
+          "javascript",   -- JavaScript
+          "json",         -- JSON
+          "lua",          -- Lua
+          "markdown",     -- Markdown
+          "python",       -- Python
+          "ruby",         -- Ruby
+          "rust",         -- Rust
+          "toml",         -- TOML
+          "typescript",   -- TypeScript
+          "vim",          -- VimScript
+          "yaml",         -- YAML
+        },
+        highlight = {
+          enable = true, -- Enable syntax highlighting
+        },
+        indent = {
+          enable = true, -- Enable Treesitter-based indentation
+        },
+        autotag = {
+          enable = true, -- Enable autotag support
+        },
+      }
+    end,
+  },
+  {
+    "windwp/nvim-ts-autotag",
+    event = "InsertEnter",
+    config = function()
+      require("nvim-ts-autotag").setup()
+    end,
+  },
 }
