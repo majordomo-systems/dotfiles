@@ -3,6 +3,7 @@
   "NvChad": { "branch": "v2.5", "commit": "bbc3d43db088c141b142a40cd5f717635833a54e" },
   "avante.nvim": { "branch": "main", "commit": "01e05a538b4b7f20fb922016d72be8c42d400b0e" },
   "base46": { "branch": "v2.5", "commit": "40943fc668bf8f1caa4cc45f71c784cf0d3cc34f" },
+  "catppuccin": { "branch": "main", "commit": "faf15ab0201b564b6368ffa47b56feefc92ce3f4" },
   "cmp-buffer": { "branch": "main", "commit": "3022dbc9166796b644a841a02de8dd1cc1d311fa" },
   "cmp-nvim-lsp": { "branch": "main", "commit": "99290b3ec1322070bcfb9e846450a46f6efa50f0" },
   "cmp-nvim-lua": { "branch": "main", "commit": "f12408bdb54c39c23e67cab726264c10db33ada8" },

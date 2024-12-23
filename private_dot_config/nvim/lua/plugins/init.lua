@@ -180,7 +180,7 @@ return {
   },
   -- Catppuccin for (Neo)vim
   -- https://github.com/catppuccin/nvim
-  -- { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   -- -- Poimandres for (Neo)vim
   -- https://github.com/olivercederborg/poimandres.nvim
   {
