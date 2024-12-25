@@ -4,14 +4,14 @@ return {
     -- event = 'BufWritePre', -- uncomment for format on save
     opts = require "configs.conform",
   },
-
-  -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
     config = function()
       require "configs.lspconfig"
     end,
   },
+  -- Indent Blankline - Adds indentation guides to Neovim.
+  -- https://github.com/lukas-reineke/indent-blankline.nvim
   {
     "lukas-reineke/indent-blankline.nvim",
     lazy = false, -- Load it during startup
@@ -27,7 +27,7 @@ return {
       })
     end,
   },
-  -- vim-visual-multi
+  -- vim-visual-multi - Multiple Select
   -- https://github.com/mg979/vim-visual-multi
   {
     "mg979/vim-visual-multi",
@@ -36,6 +36,66 @@ return {
       vim.g.VM_maps = {
         ["Find Under"] = "<c-n>"
       }
+    end,
+  },
+  -- render-markdown.nvim - Improve viewing Markdown files in Neovim
+  -- https://github.com/MeanderingProgrammer/render-markdown.nvim
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
+  },
+  -- obsidian.nvim - For writing and navigating Obsidian vaults.
+  -- https://github.com/epwalsh/obsidian.nvim
+  {
+    "epwalsh/obsidian.nvim",
+    version = "*",  -- recommended, use latest release instead of latest commit
+    lazy = true,
+    ft = "markdown",
+    -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
+    -- event = {
+    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/*.md"
+    --   -- refer to `:h file-pattern` for more examples
+    --   "BufReadPre path/to/my-vault/*.md",
+    --   "BufNewFile path/to/my-vault/*.md",
+    -- },
+    dependencies = {
+      -- Required.
+      "nvim-lua/plenary.nvim",
+
+      -- see below for full list of optional dependencies 👇
+    },
+    opts = {
+      workspaces = {
+        {
+          name = "personal",
+          path = "~/vaults/personal",
+        },
+        {
+          name = "work",
+          path = "~/vaults/work",
+        },
+      },
+
+      -- see below for full list of options 👇
+    },
+  },
+  -- mini.nvim - Library of 40+ independent Lua modules.
+  -- https://github.com/echasnovski/mini.nvim
+  {
+    "echasnovski/mini.nvim",
+    version = false,
+    config = function()
+      require("mini.animate").setup()
+      -- You can enable other modules here as well:
+      -- require("mini.pairs").setup()
+      -- require("mini.surround").setup()
+      -- etc.
     end,
   },
   -- snacks.nvim - A collection of small QoL plugins for Neovim.
@@ -129,6 +189,21 @@ return {
         end,
       })
     end,
+  },
+  -- pomo.nvim - A simple, customizable pomodoro timer.
+  -- https://github.com/epwalsh/pomo.nvim
+  {
+    "epwalsh/pomo.nvim",
+    version = "*",  -- Recommended, use latest release instead of latest commit
+    lazy = true,
+    cmd = { "TimerStart", "TimerRepeat", "TimerSession" },
+    dependencies = {
+      -- Optional, but highly recommended if you want to use the "Default" timer
+      "rcarriga/nvim-notify",
+    },
+    opts = {
+      -- See below for full list of options 👇
+    },
   },
   -- avante.nvim - AI-driven code suggestions.
   -- https://github.com/yetone/avante.nvim
