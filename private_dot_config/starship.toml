@@ -195,8 +195,8 @@ disabled = true
 # success_symbol = "[[>_](fg)](fg)"
 success_symbol = ' [ ](white bold)'
 # error_symbol = '[✘](bold red)'
-error_symbol = "[❯](red)"
-vimcmd_symbol = "[❮](green)"
+error_symbol = "[ ❯](red)"
+vimcmd_symbol = "[ ❮](green)"
 
 [time]
 format = '[ ](bold 248)[$time]($style) '
