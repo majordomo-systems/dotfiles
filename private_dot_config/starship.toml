@@ -118,7 +118,7 @@ disabled = false
 style = 'bg:surface0 fg:blue'
 symbol = '⚠️ '
 success_symbol = ''
-format = '$symbol$status$signal_name($style)'
+format = '[ $symbol$status$signal_name]($style)'
 map_symbol = true
 disabled = false
 
