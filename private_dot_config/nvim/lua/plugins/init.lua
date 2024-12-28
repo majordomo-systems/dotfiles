@@ -1,8 +1,15 @@
 return {
   {
     "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
-    opts = require "configs.conform",
+    opts = {
+      formatters_by_ft = {
+        lua = { "stylua" },
+        python = { "black" },
+        javascript = { "prettier" },
+        typescript = { "prettier" },
+        markdown = { "prettier" },
+      },
+    },
   },
   {
     "neovim/nvim-lspconfig",
@@ -27,6 +34,320 @@ return {
       })
     end,
   },
+  -- Add the missing plugins
+
+  -- NvimTree - File Explorer
+  {
+    "nvim-tree/nvim-tree.lua",
+    lazy = false,
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("nvim-tree").setup {
+        view = {
+          side = "right",
+          signcolumn = "no",
+        },
+      }
+    end,
+  },
+
+  -- Bufferline - Tabs-like Buffer Management
+  {
+    "akinsho/bufferline.nvim",
+    version = "*",
+    dependencies = "nvim-tree/nvim-web-devicons",
+    config = function()
+      require("bufferline").setup()
+    end,
+  },
+
+  -- Lualine - Status Line
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("lualine").setup {
+        options = {
+          theme = "catppuccin",
+          section_separators = { left = "", right = "" },
+          component_separators = { left = "", right = "" },
+        },
+        sections = {
+          lualine_a = { "mode" },
+          lualine_b = { "branch", "diff", "diagnostics" },
+          lualine_c = { { "filename", path = 1 } }, -- Full file path
+          lualine_x = { "encoding", "filetype" },
+          lualine_y = { "progress" },
+          lualine_z = { "location" },
+        },
+      }
+    end,
+  },
+
+  -- Telescope - Fuzzy Finder
+  {
+    "nvim-telescope/telescope.nvim",
+    version = "*",
+    dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope-fzf-native.nvim" },
+    config = function()
+      require("telescope").setup {
+        extensions = {
+          fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+          },
+        },
+      }
+      -- Load the fzf extension
+      require("telescope").load_extension("fzf")
+    end,
+  },
+  {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build = "make",
+    lazy = true,
+  },
+
+  -- Autocomplete and Snippets
+  {
+    "L3MON4D3/LuaSnip",
+    config = function()
+      -- Load snippets in VSCode format
+      require("luasnip.loaders.from_vscode").lazy_load { exclude = vim.g.vscode_snippets_exclude or {} }
+      require("luasnip.loaders.from_vscode").lazy_load { paths = vim.g.vscode_snippets_path or "" }
+
+      -- Load snippets in SnipMate format
+      require("luasnip.loaders.from_snipmate").load()
+      require("luasnip.loaders.from_snipmate").lazy_load { paths = vim.g.snipmate_snippets_path or "" }
+
+      -- Load snippets in Lua format
+      require("luasnip.loaders.from_lua").load()
+      require("luasnip.loaders.from_lua").lazy_load { paths = vim.g.lua_snippets_path or "" }
+
+      -- Autocmd to clear snippets on leaving insert mode
+      vim.api.nvim_create_autocmd("InsertLeave", {
+        callback = function()
+          if
+            require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
+            and not require("luasnip").session.jump_active
+          then
+            require("luasnip").unlink_current()
+          end
+        end,
+      })
+    end,
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "L3MON4D3/LuaSnip",
+    },
+    config = function()
+      local cmp = require("cmp")
+      cmp.setup {
+        completion = { completeopt = "menu,menuone" },
+
+        snippet = {
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+          end,
+        },
+
+        mapping = {
+          ["<C-p>"] = cmp.mapping.select_prev_item(),
+          ["<C-n>"] = cmp.mapping.select_next_item(),
+          ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-e>"] = cmp.mapping.close(),
+
+          ["<CR>"] = cmp.mapping.confirm {
+            behavior = cmp.ConfirmBehavior.Insert,
+            select = true,
+          },
+
+          ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif require("luasnip").expand_or_jumpable() then
+              require("luasnip").expand_or_jump()
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+
+          ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif require("luasnip").jumpable(-1) then
+              require("luasnip").jump(-1)
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+        },
+
+        sources = {
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+          { name = "buffer" },
+          { name = "nvim_lua" },
+          { name = "path" },
+        },
+      }
+    end,
+  },
+  {
+    "williamboman/mason.nvim",
+    dependencies = {
+      "williamboman/mason-lspconfig.nvim",
+      "jay-babu/mason-null-ls.nvim",
+    },
+    config = function()
+      require("mason").setup {
+        PATH = "skip",
+        ui = {
+          icons = {
+            package_pending = " ",
+            package_installed = " ",
+            package_uninstalled = " ",
+          },
+        },
+        max_concurrent_installers = 10,
+      }
+
+      -- Example: Mason LSPConfig setup
+      require("mason-lspconfig").setup {
+        ensure_installed = { "lua_ls", "pyright", "tsserver" }, -- Add LSP servers here
+        automatic_installation = true,
+      }
+
+      -- Example: Mason Null-LS setup
+      require("mason-null-ls").setup {
+        ensure_installed = { "prettier", "stylua", "eslint_d" }, -- Add formatters/linters here
+        automatic_installation = true,
+      }
+    end,
+  },
+  {
+    "windwp/nvim-ts-autotag",
+    event = "InsertEnter",
+    config = function()
+      require("nvim-ts-autotag").setup()
+    end,
+  },
+  {
+    "kylechui/nvim-surround",
+    version = "*",
+    config = function()
+      require("nvim-surround").setup()
+    end,
+  },
+  {
+    "numToStr/Comment.nvim",
+    config = function()
+      require("Comment").setup()
+    end,
+  },
+  {
+    "folke/todo-comments.nvim",
+    lazy = false,
+    config = function()
+      require("todo-comments").setup()
+    end,
+  },
+  {
+    "max397574/better-escape.nvim",
+    event = "InsertEnter",
+    config = function()
+      require("better_escape").setup {
+        mapping = { "jk", "kj" },
+      }
+    end,
+  },
+
+  -- Git Integration
+  {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require("gitsigns").setup {
+        signs = {
+          add = { text = "│" },
+          change = { text = "│" },
+          delete = { text = "󰍵" },        -- Custom delete sign
+          changedelete = { text = "󱕖" }, -- Custom change/delete sign
+        },
+      }
+    end,
+  },
+  {
+    "tpope/vim-fugitive",
+  },
+
+  -- UI Enhancements
+  {
+    "folke/which-key.nvim",
+    config = function()
+      require("which-key").setup()
+    end,
+  },
+  -- {
+  --   "rcarriga/nvim-notify",
+  --   config = function()
+  --     vim.notify = require("notify")
+  --   end,
+  -- },
+
+  -- Session Management
+  {
+    "Shatur/neovim-session-manager",
+    config = function()
+      local Path = require("plenary.path")
+      local config = require("session_manager.config")
+      require("session_manager").setup {
+        sessions_dir = Path:new(vim.fn.stdpath("data"), "sessions"),
+        autoload_mode = config.AutoloadMode.CurrentDir,
+      }
+    end,
+  },
+  -- Null-ls for formatting and linting
+  {
+    "jose-elias-alvarez/null-ls.nvim",
+    config = function()
+      local null_ls = require("null-ls")
+
+      -- Setup null-ls
+      null_ls.setup({
+        sources = {
+          -- Add StyLua for Lua formatting
+          null_ls.builtins.formatting.stylua.with({
+            extra_args = { "--config-path", vim.fn.expand("~/.config/nvim/.stylua.toml") },
+          }),
+          -- Add more formatters/linters as needed
+        },
+        on_attach = function(client, bufnr)
+          -- Format on save
+          if client.server_capabilities.documentFormattingProvider then
+            vim.api.nvim_clear_autocmds({ group = "LspFormatting", buffer = bufnr })
+            vim.api.nvim_create_autocmd("BufWritePre", {
+              group = vim.api.nvim_create_augroup("LspFormatting", {}),
+              buffer = bufnr,
+              callback = function()
+                vim.lsp.buf.format({ bufnr = bufnr })
+              end,
+            })
+          end
+        end,
+      })
+    end,
+  },
+
+  -- END NEW PLUGINS
+
   -- vim-visual-multi - Multiple Select
   -- https://github.com/mg979/vim-visual-multi
   {
@@ -274,11 +595,10 @@ return {
         disable_italics = false, -- disable italics
       }
     end,
-
     -- optionally set the colorscheme within lazy config
-    -- init = function()
-    --   vim.cmd("colorscheme poimandres")
-    -- end
+    init = function()
+      vim.cmd("colorscheme poimandres")
+    end
   },
   {
     "nvim-treesitter/nvim-treesitter",
