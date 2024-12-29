@@ -1,39 +1,101 @@
 return {
-  {
-    "stevearc/conform.nvim",
-    opts = {
-      formatters_by_ft = {
-        lua = { "stylua" },
-        python = { "black" },
-        javascript = { "prettier" },
-        typescript = { "prettier" },
-        markdown = { "prettier" },
-      },
-    },
-  },
+  -- ##########################################################################################
+  -- ##########################################################################################
+  -- Core Functionality
+  -- ##########################################################################################
+  -- ##########################################################################################
+  -- nvim-lspconfig - Provides core LSP support and configuration.
+  -- https://github.com/neovim/nvim-lspconfig
   {
     "neovim/nvim-lspconfig",
     config = function()
       require("configs.lspconfig").setup_servers()
     end,
   },
-  -- Indent Blankline - Adds indentation guides to Neovim.
-  -- https://github.com/lukas-reineke/indent-blankline.nvim
+  -- ##########################################################################################
+  -- Mason - Manages external LSP, DAP, and formatter installations.
+  -- https://github.com/williamboman/mason.nvim
   {
-    "lukas-reineke/indent-blankline.nvim",
-    lazy = false, -- Load it during startup
+    "williamboman/mason.nvim",
+    cmd = { "Mason", "MasonInstall", "MasonInstallAll", "MasonUpdate" },
+    dependencies = {
+      "williamboman/mason-lspconfig.nvim",
+      "jay-babu/mason-null-ls.nvim",
+    },
     config = function()
-      require("ibl").setup({
-        indent = {
-          char = "▏", -- The character for indent lines
+      require("mason").setup {
+        PATH = "skip",
+        ui = {
+          icons = {
+            package_pending = " ",
+            package_installed = " ",
+            package_uninstalled = " ",
+          },
         },
-        exclude = {
-          filetypes = { "help", "dashboard", "NvimTree", "packer" }, -- Exclude specific filetypes
-          buftypes = { "terminal", "nofile" }, -- Exclude specific buffer types
-        },
-      })
+        max_concurrent_installers = 10,
+      }
+
+      -- Mason LSPConfig setup
+      require("mason-lspconfig").setup {
+        ensure_installed = { "lua_ls", "pyright", "ts_ls" },
+        automatic_installation = true,
+      }
+
+      -- Mason Null-LS setup
+      require("mason-null-ls").setup {
+        ensure_installed = { "prettier", "stylua", "eslint_d" },
+        automatic_installation = true,
+      }
     end,
   },
+  -- ##########################################################################################
+  -- Treesitter - Advanced parsing and syntax highlighting.
+  -- https://github.com/nvim-treesitter/nvim-treesitter
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    event = "BufReadPost",
+    config = function()
+      require("nvim-treesitter.configs").setup {
+        -- List of common languages
+        ensure_installed = {
+          "bash",         -- Shell scripting
+          "c",            -- C language
+          "cpp",          -- C++
+          "css",          -- CSS
+          "dockerfile",   -- Dockerfiles
+          "go",           -- Go language
+          "html",         -- HTML
+          "java",         -- Java
+          "javascript",   -- JavaScript
+          "json",         -- JSON
+          "lua",          -- Lua
+          "markdown",     -- Markdown
+          "python",       -- Python
+          "ruby",         -- Ruby
+          "rust",         -- Rust
+          "toml",         -- TOML
+          "typescript",   -- TypeScript
+          "vim",          -- VimScript
+          "yaml",         -- YAML
+        },
+        highlight = {
+          enable = true, -- Enable syntax highlighting
+        },
+        indent = {
+          enable = true, -- Enable Treesitter-based indentation
+        },
+        autotag = {
+          enable = true, -- Enable autotag support
+        },
+      }
+    end,
+  },
+  -- ##########################################################################################
+  -- ##########################################################################################
+  -- Multi Functional
+  -- ##########################################################################################
+  -- ##########################################################################################
   -- snacks.nvim - A collection of small QoL plugins for Neovim.
   -- https://github.com/folke/snacks.nvim
   {
@@ -126,9 +188,45 @@ return {
       })
     end,
   },
-  -- Add the missing plugins
-
+  -- ##########################################################################################
+  -- mini.nvim - Library of 40+ independent Lua modules.
+  -- https://github.com/echasnovski/mini.nvim
+  {
+    "echasnovski/mini.nvim",
+    version = false,
+    config = function()
+      require("mini.animate").setup()
+      -- You can enable other modules here as well:
+      -- require("mini.pairs").setup()
+      -- require("mini.surround").setup()
+      -- etc.
+    end,
+  },
+  -- ##########################################################################################
+  -- ##########################################################################################
+  -- User Interface (UI Enhancements)
+  -- ##########################################################################################
+  -- ##########################################################################################
+  -- Indent Blankline - Adds indentation guides to Neovim.
+  -- https://github.com/lukas-reineke/indent-blankline.nvim
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    lazy = false, -- Load it during startup
+    config = function()
+      require("ibl").setup({
+        indent = {
+          char = "▏", -- The character for indent lines
+        },
+        exclude = {
+          filetypes = { "help", "dashboard", "NvimTree", "packer" }, -- Exclude specific filetypes
+          buftypes = { "terminal", "nofile" }, -- Exclude specific buffer types
+        },
+      })
+    end,
+  },
+  -- ##########################################################################################
   -- NvimTree - File Explorer
+  -- https://github.com/nvim-tree/nvim-tree.lua
   {
     "nvim-tree/nvim-tree.lua",
     lazy = false,
@@ -142,8 +240,9 @@ return {
       }
     end,
   },
-
+  -- ##########################################################################################
   -- Bufferline - Tabs-like Buffer Management
+  -- https://github.com/akinsho/bufferline.nvim
   {
     "akinsho/bufferline.nvim",
     version = "*",
@@ -152,8 +251,9 @@ return {
       require("bufferline").setup()
     end,
   },
-
-  -- Lualine - Status Line
+  -- ##########################################################################################
+  -- Lualine - Status line with theming options.
+  -- https://github.com/nvim-lualine/lualine.nvim
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -175,33 +275,69 @@ return {
       }
     end,
   },
-
-  -- Telescope - Fuzzy Finder
+  -- ##########################################################################################
+  -- Which-Key - Pop-up helper for keybindings.
+  -- https://github.com/folke/which-key.nvim
   {
-    "nvim-telescope/telescope.nvim",
-    version = "*",
-    dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope-fzf-native.nvim" },
+    "folke/which-key.nvim",
     config = function()
-      require("telescope").setup {
-        extensions = {
-          fzf = {
-            fuzzy = true,
-            override_generic_sorter = true,
-            override_file_sorter = true,
-          },
-        },
-      }
-      -- Load the fzf extension
-      require("telescope").load_extension("fzf")
+      require("which-key").setup()
     end,
   },
+  -- ##########################################################################################
+  -- ##########################################################################################
+  -- User Interface (Themes)
+  -- ##########################################################################################
+  -- ##########################################################################################
+  -- Catppuccin for (Neo)vim
+  -- https://github.com/catppuccin/nvim
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  -- ##########################################################################################
+  -- -- Poimandres for (Neo)vim
+  -- https://github.com/olivercederborg/poimandres.nvim
   {
-    "nvim-telescope/telescope-fzf-native.nvim",
-    build = "make",
-    dependencies = { "nvim-telescope/telescope.nvim" },
+    'olivercederborg/poimandres.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require('poimandres').setup {
+        -- leave this setup function empty for default config
+        -- or refer to the configuration section
+        -- for configuration options
+        bold_vert_split = false, -- use bold vertical separators
+        dim_nc_background = false, -- dim 'non-current' window backgrounds
+        disable_background = false, -- disable background
+        disable_float_background = false, -- disable background for floats
+        disable_italics = false, -- disable italics
+      }
+    end,
+    -- optionally set the colorscheme within lazy config
+    init = function()
+      vim.cmd("colorscheme poimandres")
+    end
   },
-
-  -- Autocomplete and Snippets
+  -- ##########################################################################################
+  -- ##########################################################################################
+  -- Editing Enhancements
+  -- ##########################################################################################
+  -- ##########################################################################################
+  -- Conform - Code formatting manager.
+  -- https://github.com/stevearc/conform.nvim
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        lua = { "stylua" },
+        python = { "black" },
+        javascript = { "prettier" },
+        typescript = { "prettier" },
+        markdown = { "prettier" },
+      },
+    },
+  },
+  -- ##########################################################################################
+  -- LuaSnip - Snippet engine and collection.
+  -- https://github.com/L3MON4D3/LuaSnip
   {
     "L3MON4D3/LuaSnip",
     config = function()
@@ -230,6 +366,9 @@ return {
       })
     end,
   },
+  -- ##########################################################################################
+  -- nvim-cmp - Autocompletion framework.
+  -- https://github.com/hrsh7th/nvim-cmp
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
@@ -293,39 +432,9 @@ return {
       }
     end,
   },
-  {
-    "williamboman/mason.nvim",
-    cmd = { "Mason", "MasonInstall", "MasonInstallAll", "MasonUpdate" },
-    dependencies = {
-      "williamboman/mason-lspconfig.nvim",
-      "jay-babu/mason-null-ls.nvim",
-    },
-    config = function()
-      require("mason").setup {
-        PATH = "skip",
-        ui = {
-          icons = {
-            package_pending = " ",
-            package_installed = " ",
-            package_uninstalled = " ",
-          },
-        },
-        max_concurrent_installers = 10,
-      }
-
-      -- Mason LSPConfig setup
-      require("mason-lspconfig").setup {
-        ensure_installed = { "lua_ls", "pyright", "ts_ls" },
-        automatic_installation = true,
-      }
-
-      -- Mason Null-LS setup
-      require("mason-null-ls").setup {
-        ensure_installed = { "prettier", "stylua", "eslint_d" },
-        automatic_installation = true,
-      }
-    end,
-  },
+  -- ##########################################################################################
+  -- Auto-closing and auto-renaming of HTML/JSX tags using Treesitter.
+  -- https://github.com/windwp/nvim-ts-autotag
   {
     "windwp/nvim-ts-autotag",
     event = "InsertEnter",
@@ -333,6 +442,9 @@ return {
       require("nvim-ts-autotag").setup()
     end,
   },
+  -- ##########################################################################################  
+  -- nvim-surround - Surround text objects easily.
+  -- https://github.com/kylechui/nvim-surround
   {
     "kylechui/nvim-surround",
     version = "*",
@@ -340,12 +452,18 @@ return {
       require("nvim-surround").setup()
     end,
   },
+  -- ##########################################################################################
+  -- Comment - Quick commenting functionality.
+  -- https://github.com/numToStr/Comment.nvim
   {
     "numToStr/Comment.nvim",
     config = function()
       require("Comment").setup()
     end,
   },
+  -- ##########################################################################################
+  -- ToDo Comments - Highlights and organizes TODO comments.
+  -- https://github.com/folke/todo-comments.nvim
   {
     "folke/todo-comments.nvim",
     lazy = false,
@@ -353,6 +471,9 @@ return {
       require("todo-comments").setup()
     end,
   },
+  -- ##########################################################################################
+  -- Better Escape - Improves the escape mechanism from insert mode.
+  -- https://github.com/max397574/better-escape.nvim
   {
     "max397574/better-escape.nvim",
     event = "InsertEnter",
@@ -362,53 +483,9 @@ return {
       }
     end,
   },
-
-  -- Git Integration
-  {
-    "lewis6991/gitsigns.nvim",
-    config = function()
-      require("gitsigns").setup {
-        signs = {
-          add = { text = "│" },
-          change = { text = "│" },
-          delete = { text = "󰍵" },        -- Custom delete sign
-          changedelete = { text = "󱕖" }, -- Custom change/delete sign
-        },
-      }
-    end,
-  },
-  {
-    "tpope/vim-fugitive",
-  },
-
-  -- UI Enhancements
-  {
-    "folke/which-key.nvim",
-    config = function()
-      require("which-key").setup()
-    end,
-  },
-  -- {
-  --   "rcarriga/nvim-notify",
-  --   config = function()
-  --     vim.notify = require("notify")
-  --   end,
-  -- },
-
-  -- Session Management
-  {
-    "Shatur/neovim-session-manager",
-    config = function()
-      local Path = require("plenary.path")
-      local config = require("session_manager.config")
-      require("session_manager").setup {
-        sessions_dir = Path:new(vim.fn.stdpath("data"), "sessions"),
-        autoload_mode = config.AutoloadMode.Disabled, -- Disable automatic session loading
-      }
-    end,
-  },
-
-  -- Null-ls for formatting and linting
+  -- ##########################################################################################
+  -- Null-ls - Extends LSP features (formatting, linting) with external tools. [ARCHIVED PROJECT]
+  -- https://github.com/jose-elias-alvarez/null-ls.nvim
   {
     "jose-elias-alvarez/null-ls.nvim",
     config = function()
@@ -439,10 +516,8 @@ return {
       })
     end,
   },
-
-  -- END NEW PLUGINS
-
-  -- vim-visual-multi - Multiple Select
+  -- ##########################################################################################
+  -- vim-visual-multi - Multiple cursor/selection editing.
   -- https://github.com/mg979/vim-visual-multi
   {
     "mg979/vim-visual-multi",
@@ -453,66 +528,76 @@ return {
       }
     end,
   },
-  -- render-markdown.nvim - Improve viewing Markdown files in Neovim
-  -- https://github.com/MeanderingProgrammer/render-markdown.nvim
+  -- ##########################################################################################
+  -- ##########################################################################################
+  -- Workflow Enhancements
+  -- ##########################################################################################
+  -- ##########################################################################################
+  -- Telescope - Fuzzy finder to quickly locate files, text, etc.
+  -- https://github.com/nvim-telescope/telescope.nvim
   {
-    'MeanderingProgrammer/render-markdown.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-    ---@module 'render-markdown'
-    ---@type render.md.UserConfig
-    opts = {},
-  },
-  -- obsidian.nvim - For writing and navigating Obsidian vaults.
-  -- https://github.com/epwalsh/obsidian.nvim
-  {
-    "epwalsh/obsidian.nvim",
-    version = "*",  -- recommended, use latest release instead of latest commit
-    lazy = true,
-    ft = "markdown",
-    -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
-    -- event = {
-    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
-    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/*.md"
-    --   -- refer to `:h file-pattern` for more examples
-    --   "BufReadPre path/to/my-vault/*.md",
-    --   "BufNewFile path/to/my-vault/*.md",
-    -- },
-    dependencies = {
-      -- Required.
-      "nvim-lua/plenary.nvim",
-
-      -- see below for full list of optional dependencies 👇
-    },
-    opts = {
-      workspaces = {
-        {
-          name = "personal",
-          path = "~/vaults/personal",
-        },
-        {
-          name = "work",
-          path = "~/vaults/work",
-        },
-      },
-
-      -- see below for full list of options 👇
-    },
-  },
-  -- mini.nvim - Library of 40+ independent Lua modules.
-  -- https://github.com/echasnovski/mini.nvim
-  {
-    "echasnovski/mini.nvim",
-    version = false,
+    "nvim-telescope/telescope.nvim",
+    version = "*",
+    dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope-fzf-native.nvim" },
     config = function()
-      require("mini.animate").setup()
-      -- You can enable other modules here as well:
-      -- require("mini.pairs").setup()
-      -- require("mini.surround").setup()
-      -- etc.
+      require("telescope").setup {
+        extensions = {
+          fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+          },
+        },
+      }
+      -- Load the fzf extension
+      require("telescope").load_extension("fzf")
     end,
   },
+  -- ##########################################################################################
+  -- FZF extension for Telescope.
+  -- https://github.com/nvim-telescope/telescope-fzf-native.nvim
+  {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build = "make",
+    dependencies = { "nvim-telescope/telescope.nvim" },
+  },
+  -- ##########################################################################################
+  -- Git Signs - Git signs in the gutter (add/change/delete).
+  -- https://github.com/lewis6991/gitsigns.nvim
+  {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require("gitsigns").setup {
+        signs = {
+          add = { text = "│" },
+          change = { text = "│" },
+          delete = { text = "󰍵" },        -- Custom delete sign
+          changedelete = { text = "󱕖" }, -- Custom change/delete sign
+        },
+      }
+    end,
+  },
+  -- ##########################################################################################
+  -- Vim Fugitive - Powerful Git integration within Neovim.
+  -- https://github.com/tpope/vim-fugitive
+  {
+    "tpope/vim-fugitive",
+  },
+  -- ##########################################################################################
+  -- Session management for restoring open buffers, windows, etc.
+  -- https://github.com/Shatur/neovim-session-manager
+  {
+    "Shatur/neovim-session-manager",
+    config = function()
+      local Path = require("plenary.path")
+      local config = require("session_manager.config")
+      require("session_manager").setup {
+        sessions_dir = Path:new(vim.fn.stdpath("data"), "sessions"),
+        autoload_mode = config.AutoloadMode.Disabled, -- Disable automatic session loading
+      }
+    end,
+  },
+  -- ##########################################################################################
   -- pomo.nvim - A simple, customizable pomodoro timer.
   -- https://github.com/epwalsh/pomo.nvim
   {
@@ -528,6 +613,7 @@ return {
       -- See below for full list of options 👇
     },
   },
+  -- ##########################################################################################
   -- avante.nvim - AI-driven code suggestions.
   -- https://github.com/yetone/avante.nvim
   {
@@ -576,77 +662,58 @@ return {
       },
     },
   },
-  -- Catppuccin for (Neo)vim
-  -- https://github.com/catppuccin/nvim
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-  -- -- Poimandres for (Neo)vim
-  -- https://github.com/olivercederborg/poimandres.nvim
+  -- ##########################################################################################
+  -- ##########################################################################################
+  -- Workflow Enhancements
+  -- ##########################################################################################
+  -- ##########################################################################################
+  -- render-markdown.nvim - Improve viewing Markdown files in Neovim
+  -- https://github.com/MeanderingProgrammer/render-markdown.nvim
   {
-    'olivercederborg/poimandres.nvim',
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require('poimandres').setup {
-        -- leave this setup function empty for default config
-        -- or refer to the configuration section
-        -- for configuration options
-        bold_vert_split = false, -- use bold vertical separators
-        dim_nc_background = false, -- dim 'non-current' window backgrounds
-        disable_background = false, -- disable background
-        disable_float_background = false, -- disable background for floats
-        disable_italics = false, -- disable italics
-      }
-    end,
-    -- optionally set the colorscheme within lazy config
-    init = function()
-      vim.cmd("colorscheme poimandres")
-    end
+    'MeanderingProgrammer/render-markdown.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
   },
+  -- ##########################################################################################
+  -- obsidian.nvim - For writing and navigating Obsidian vaults.
+  -- https://github.com/epwalsh/obsidian.nvim
   {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    event = "BufReadPost",
-    config = function()
-      require("nvim-treesitter.configs").setup {
-        -- List of common languages
-        ensure_installed = {
-          "bash",         -- Shell scripting
-          "c",            -- C language
-          "cpp",          -- C++
-          "css",          -- CSS
-          "dockerfile",   -- Dockerfiles
-          "go",           -- Go language
-          "html",         -- HTML
-          "java",         -- Java
-          "javascript",   -- JavaScript
-          "json",         -- JSON
-          "lua",          -- Lua
-          "markdown",     -- Markdown
-          "python",       -- Python
-          "ruby",         -- Ruby
-          "rust",         -- Rust
-          "toml",         -- TOML
-          "typescript",   -- TypeScript
-          "vim",          -- VimScript
-          "yaml",         -- YAML
+    "epwalsh/obsidian.nvim",
+    version = "*",  -- recommended, use latest release instead of latest commit
+    lazy = true,
+    ft = "markdown",
+    -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
+    -- event = {
+    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/*.md"
+    --   -- refer to `:h file-pattern` for more examples
+    --   "BufReadPre path/to/my-vault/*.md",
+    --   "BufNewFile path/to/my-vault/*.md",
+    -- },
+    dependencies = {
+      -- Required.
+      "nvim-lua/plenary.nvim",
+
+      -- see below for full list of optional dependencies 👇
+    },
+    opts = {
+      workspaces = {
+        {
+          name = "personal",
+          path = "~/vaults/personal",
         },
-        highlight = {
-          enable = true, -- Enable syntax highlighting
+        {
+          name = "work",
+          path = "~/vaults/work",
         },
-        indent = {
-          enable = true, -- Enable Treesitter-based indentation
-        },
-        autotag = {
-          enable = true, -- Enable autotag support
-        },
-      }
-    end,
+      },
+
+      -- see below for full list of options 👇
+    },
   },
-  {
-    "windwp/nvim-ts-autotag",
-    event = "InsertEnter",
-    config = function()
-      require("nvim-ts-autotag").setup()
-    end,
-  },
+  -- ##########################################################################################
 }
