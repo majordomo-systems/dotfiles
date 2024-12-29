@@ -197,16 +197,9 @@ return {
   },
   {
     "nvim-telescope/telescope-fzf-native.nvim",
-    build = function()
-      if vim.fn.executable("make") == 1 then
-        vim.fn.system("make")
-      else
-        vim.notify("`make` is not installed. Telescope FZF will not work.", vim.log.levels.ERROR)
-      end
-    end,
-    lazy = true,
+    build = "make",
+    dependencies = { "nvim-telescope/telescope.nvim" },
   },
-
 
   -- Autocomplete and Snippets
   {
