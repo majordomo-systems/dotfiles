@@ -85,9 +85,6 @@ return {
         indent = {
           enable = true, -- Enable Treesitter-based indentation
         },
-        autotag = {
-          enable = true, -- Enable autotag support
-        },
       }
     end,
   },
