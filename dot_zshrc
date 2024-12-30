@@ -138,4 +138,5 @@ HISTCONTROL=ignoreboth
 
 # ZVM - A better and friendly vi(vim) mode plugin for ZSH.
 # https://github.com/jeffreytse/zsh-vi-mode
-source /run/current-system/sw/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+# source /run/current-system/sw/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+source /nix/store/*-zsh-vi-mode*/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
