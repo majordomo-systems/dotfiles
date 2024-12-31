@@ -28,7 +28,7 @@
 ## Prerequisites
 
 - **Neovim 0.8+** (ideally 0.9 or above).  
-- A modern terminal that supports true color, such as [Kitty](https://sw.kovidgoyal.net/kitty/) or [Alacritty](https://github.com/alacritty/alacritty).  
+- A modern terminal that supports true color, such as [Ghostty](https://ghostty.org/) or [Alacritty](https://github.com/alacritty/alacritty).  
 - (Optional) [git](https://git-scm.com/) for source control.  
 - (Optional) External formatters/linters for advanced language features, if desired.
 

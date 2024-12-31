@@ -21,10 +21,11 @@ vim.g.maplocalleader = "\\"
 
 -- Lazy.nvim setup
 require("lazy").setup({
-  spec = {
-    -- Load plugins from the plugins directory
-    { import = "plugins" },
-  },
+  -- spec = {
+  --   -- Load plugins from the plugins directory
+  --   { import = "plugins" },
+  -- },
+  spec = require("plugins"), -- Load plugins from the plugins file
   install = {
     -- Set default colorscheme during installation
     colorscheme = { "poimandres" },
