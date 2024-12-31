@@ -1,0 +1,5 @@
+[user]
+	name = majordomo-admin
+	email = admin@majordomo.systems
+[core]
+	excludesfile = ~/.gitignore
