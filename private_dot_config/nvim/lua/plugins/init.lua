@@ -89,6 +89,18 @@ return {
     end,
   },
   -- ##########################################################################################
+  -- Legendary -  Keymaps, commands, and autocommands as Lua tables, building a legend at the same time.
+  -- https://github.com/mrjones2014/legendary.nvim
+  {
+    'mrjones2014/legendary.nvim',
+    -- since legendary.nvim handles all your keymaps/commands,
+    -- its recommended to load legendary.nvim before other plugins
+    priority = 10000,
+    lazy = false,
+    -- sqlite is only needed if you want to use frequency sorting
+    -- dependencies = { 'kkharji/sqlite.lua' }
+  },
+  -- ##########################################################################################
   -- ##########################################################################################
   -- Multi Functional
   -- ##########################################################################################
