@@ -1,10 +1,15 @@
+# Ghostty Configurator - https://ghostty.zerebos.com/
+
+# theme = catppuccin-mocha
+
 font-size = 26
-theme = catppuccin-mocha
+# font-family = FiraMono Nerd Font
 background = #16161d
 # background = #15151e
 background-opacity = 0.75
 background-blur-radius = 20
 mouse-hide-while-typing = true
+mouse-scroll-multiplier = 2
 shell-integration = zsh
 clipboard-read = allow
 clipboard-write = allow
