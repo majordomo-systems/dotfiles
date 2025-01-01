@@ -123,3 +123,7 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# Tmuxifier - https://github.com/jimeh/tmuxifier
+# Add $HOME/.tmuxifier/bin to your PATH
+export PATH="$HOME/.tmuxifier/bin:$PATH"
