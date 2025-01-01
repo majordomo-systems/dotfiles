@@ -115,25 +115,20 @@ symbol = " "
 disabled = false
 
 [status]
+# '[\[$symbol$status$common_meaning$signal_name$maybe_int\]]($style) '
+format = '$symbol'
 style = 'bg:surface0 fg:blue'
-symbol = '⚠️ '
-success_symbol = ''
-format = '[ $symbol$status$signal_name]($style)'
+# symbol = '[●\($status\)]($style)'
+# success_symbol = '[●]($style)'
+not_executable_symbol = '[ ⌽\($status\)]($style)'
+not_found_symbol = '[ ◎\($status\)]($style)'
+sigint_symbol = '[ \($status\)]($style)'
+signal_symbol = '[ \($status\)]($style)'
+# sigint_symbol = '[ ●\($status\)]($style)'
+# signal_symbol = '[ ✕\($status\)]($style)'
+recognize_signal_code = true
 map_symbol = true
 disabled = false
-
-# [status]
-# # '[\[$symbol$common_meaning$signal_name$maybe_int\]]($style) '
-# format = '$symbol'
-# symbol = '[●\($status\)](bright-red) '
-# success_symbol = '[●](green) '
-# not_executable_symbol = '[⌽\($status\)](bright-red) '
-# not_found_symbol = '[◎\($status\)](bright-red) '
-# sigint_symbol = '[✶\($status\)](bright-red) '
-# signal_symbol = '[✕\($status\)](bright-red) '
-# recognize_signal_code = true
-# map_symbol = true
-# disabled = false
 
 [sudo]
 #           |
