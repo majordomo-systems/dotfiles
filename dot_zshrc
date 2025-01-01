@@ -31,6 +31,11 @@ eval "$(starship init zsh)"
 # Zoxide initialization
 eval "$(zoxide init zsh)"
 
+# Tmuxifier - https://github.com/jimeh/tmuxifier
+# Add $HOME/.tmuxifier/bin to your PATH then initialize
+export PATH="$HOME/.tmuxifier/bin:$PATH"
+eval "$(tmuxifier init -)"
+
 # Bindings
 bindkey "\e[A" history-search-backward
 bindkey "\e[B" history-search-forward
@@ -141,6 +146,3 @@ HISTCONTROL=ignoreboth
 # source /run/current-system/sw/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 source /nix/store/*-zsh-vi-mode*/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 
-# Tmuxifier - https://github.com/jimeh/tmuxifier
-# Add $HOME/.tmuxifier/bin to your PATH
-export PATH="$HOME/.tmuxifier/bin:$PATH"
