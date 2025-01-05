@@ -204,11 +204,13 @@ return {
     "echasnovski/mini.nvim",
     version = false,
     config = function()
+      require("mini.ai").setup()
+      require("mini.align").setup()
       require("mini.animate").setup()
-      -- You can enable other modules here as well:
-      -- require("mini.pairs").setup()
-      -- require("mini.surround").setup()
-      -- etc.
+      require("mini.basics").setup()
+      require("mini.comment").setup()
+      require("mini.surround").setup()
+      require("mini.trailspace").setup()
     end,
   },
   -- ##########################################################################################
@@ -236,17 +238,77 @@ return {
   -- ##########################################################################################
   -- NvimTree - File Explorer
   -- https://github.com/nvim-tree/nvim-tree.lua
+  -- {
+  --   "nvim-tree/nvim-tree.lua",
+  --   lazy = false,
+  --   dependencies = { "nvim-tree/nvim-web-devicons" },
+  --   config = function()
+  --     require("nvim-tree").setup {
+  --       view = {
+  --         side = "right",
+  --         signcolumn = "no",
+  --       },
+  --     }
+  --   end,
+  -- },
   {
     "nvim-tree/nvim-tree.lua",
     lazy = false,
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      require("nvim-tree").setup {
+      -- Keymap to toggle the file explorer
+      vim.cmd([[
+        nnoremap - :NvimTreeToggle<CR>
+      ]])
+
+      -- Disable netrw
+      vim.g.loaded_netrw = 1
+      vim.g.loaded_netrwPlugin = 1
+
+      -- Use terminal colors
+      vim.opt.termguicolors = true
+
+      -- Ratios for floating window geometry
+      local HEIGHT_RATIO = 0.8  -- Adjust for your preference
+      local WIDTH_RATIO  = 0.75  -- Adjust for your preference
+
+      require("nvim-tree").setup({
+        disable_netrw = true,
+        hijack_netrw = true,
+        respect_buf_cwd = true,
+        sync_root_with_cwd = true,
         view = {
-          side = "right",
-          signcolumn = "no",
+          relativenumber = true,
+          float = {
+            enable = true,
+            open_win_config = function()
+              local screen_w = vim.opt.columns:get()
+              local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
+              local window_w = screen_w * WIDTH_RATIO
+              local window_h = screen_h * HEIGHT_RATIO
+              local window_w_int = math.floor(window_w)
+              local window_h_int = math.floor(window_h)
+              local center_x = (screen_w - window_w) / 2
+              local center_y = ((vim.opt.lines:get() - window_h) / 2)
+                               - vim.opt.cmdheight:get()
+              return {
+                border = "rounded",
+                relative = "editor",
+                row = center_y,
+                col = center_x,
+                width = window_w_int,
+                height = window_h_int,
+              }
+            end,
+          },
+          width = function()
+            return math.floor(vim.opt.columns:get() * WIDTH_RATIO)
+          end,
         },
-      }
+        -- Example of other optional config:
+        -- filters = { custom = { "^.git$" } },
+        -- renderer = { indent_width = 1 },
+      })
     end,
   },
   -- ##########################################################################################
@@ -285,6 +347,44 @@ return {
     end,
   },
   -- ##########################################################################################
+  -- Noice - Plugin that completely replaces the UI for messages, cmdline and the popupmenu.
+  -- https://github.com/folke/noice.nvim?tab=readme-ov-file
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {
+      -- add any options here
+    },
+    dependencies = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      "MunifTanjim/nui.nvim",
+      -- OPTIONAL:
+      --   `nvim-notify` is only needed, if you want to use the notification view.
+      --   If not available, we use `mini` as the fallback
+      -- "rcarriga/nvim-notify",
+    },
+    config = function()
+      require("noice").setup({
+        lsp = {
+          -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+          },
+        },
+        -- you can enable a preset for easier configuration
+        presets = {
+          bottom_search = true, -- use a classic bottom cmdline for search
+          command_palette = true, -- position the cmdline and popupmenu together
+          long_message_to_split = true, -- long messages will be sent to a split
+          inc_rename = false, -- enables an input dialog for inc-rename.nvim
+          lsp_doc_border = false, -- add a border to hover docs and signature help
+        },
+      })
+    end,
+  },
+  -- ##########################################################################################
   -- Which-Key - Pop-up helper for keybindings.
   -- https://github.com/folke/which-key.nvim
   {
@@ -302,7 +402,7 @@ return {
   -- https://github.com/catppuccin/nvim
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   -- ##########################################################################################
-  -- -- Poimandres for (Neo)vim
+  -- Poimandres for (Neo)vim
   -- https://github.com/olivercederborg/poimandres.nvim
   {
     'olivercederborg/poimandres.nvim',
@@ -324,6 +424,75 @@ return {
     init = function()
       vim.cmd("colorscheme poimandres")
     end
+  },
+  -- ##########################################################################################
+  -- Tundra for (Neo)vim
+  -- https://github.com/sam4llis/nvim-tundra?tab=readme-ov-file
+  {
+    'sam4llis/nvim-tundra',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require('nvim-tundra').setup({
+        transparent_background = false,
+        dim_inactive_windows = {
+          enabled = false,
+          color = nil,
+        },
+        sidebars = {
+          enabled = true,
+          color = nil,
+        },
+        editor = {
+          search = {},
+          substitute = {},
+        },
+        syntax = {
+          booleans = { bold = true, italic = true },
+          comments = { bold = true, italic = true },
+          conditionals = {},
+          constants = { bold = true },
+          fields = {},
+          functions = {},
+          keywords = {},
+          loops = {},
+          numbers = { bold = true },
+          operators = { bold = true },
+          punctuation = {},
+          strings = {},
+          types = { italic = true },
+        },
+        diagnostics = {
+          errors = {},
+          warnings = {},
+          information = {},
+          hints = {},
+        },
+        plugins = {
+          lsp = true,
+          semantic_tokens = true,
+          treesitter = true,
+          telescope = true,
+          nvimtree = true,
+          cmp = true,
+          context = true,
+          dbui = true,
+          gitsigns = true,
+          neogit = true,
+          textfsm = true,
+        },
+        overwrite = {
+          colors = {},
+          highlights = {},
+        },
+      })
+
+    end,
+    -- init = function()
+    --   vim.g.tundra_biome = 'arctic' -- 'arctic' or 'jungle'
+    --   vim.opt.background = 'dark'
+    --   vim.cmd('colorscheme tundra')
+    -- end
   },
   -- ##########################################################################################
   -- ##########################################################################################
@@ -449,25 +618,6 @@ return {
     event = "InsertEnter",
     config = function()
       require("nvim-ts-autotag").setup()
-    end,
-  },
-  -- ##########################################################################################  
-  -- nvim-surround - Surround text objects easily.
-  -- https://github.com/kylechui/nvim-surround
-  {
-    "kylechui/nvim-surround",
-    version = "*",
-    config = function()
-      require("nvim-surround").setup()
-    end,
-  },
-  -- ##########################################################################################
-  -- Comment - Quick commenting functionality.
-  -- https://github.com/numToStr/Comment.nvim
-  {
-    "numToStr/Comment.nvim",
-    config = function()
-      require("Comment").setup()
     end,
   },
   -- ##########################################################################################
