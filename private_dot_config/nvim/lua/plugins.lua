@@ -401,7 +401,7 @@ return {
   -- ##########################################################################################
   -- Catppuccin for (Neo)vim
   -- https://github.com/catppuccin/nvim
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  -- { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   -- ##########################################################################################
   -- Poimandres for (Neo)vim
   -- https://github.com/olivercederborg/poimandres.nvim
@@ -427,14 +427,14 @@ return {
     end
   },
   -- ##########################################################################################
-  -- Poimandres for (Neo)vim
+  -- Retro Green for (Neo)vim
   -- https://github.com/guruguhangunaratnam/retro_green.nvim
   -- {
   --   'guruguhangunaratnam/retro_green.nvim',
   --   lazy = false,
   --   priority = 1000,
   --   config = function()
-  --     require('poimandres').setup {
+  --     require('retro_green').setup {
   --       -- leave this setup function empty for default config
   --       -- or refer to the configuration section
   --       -- for configuration options
@@ -447,7 +447,7 @@ return {
   --   end,
   --   -- optionally set the colorscheme within lazy config
   --   init = function()
-  --     vim.cmd("colorscheme poimandres")
+  --     vim.cmd("colorscheme retro_green")
   --   end
   -- },
   -- ##########################################################################################
