@@ -1,7 +1,7 @@
 
 # LazyChode
 
-**LazyChode** is a Neovim configuration powered by the [lazy.nvim](https://github.com/folke/lazy.nvim) plugin manager. This setup aims to provide a solid, modern foundation for coding, writing, and everything in between. Below, you’ll find detailed information on installation, usage, and customization.
+**LazyChode** is a Neovim configuration powered by the [lazy.nvim](https://github.com/folke/lazy.nvim) plugin manager. This setup aims to provide a simple, solid, modern foundation for coding and writing. Below, you’ll find detailed information on installation, usage, and customization.
 
 ---
 
@@ -43,9 +43,8 @@
 
 2. **Clone LazyChode** into your Neovim config directory:
    ```bash
-   git clone https://github.com/YourUserName/LazyChode.git ~/.config/nvim
+   git clone https://github.com/guruguhangunaratnam/lazychode.nvim.git ~/.config/nvim
    ```
-   > Replace `YourUserName` with your actual GitHub username or whichever repository you’re using to store your config.
 
 3. **Install [lazy.nvim](https://github.com/folke/lazy.nvim)** (if you haven't already):  
    ```lua
@@ -118,8 +117,6 @@ LazyChode’s plugin file is structured by **categories** for easy navigation:
 7. **Markdown/Docs/Notes**  
    Tools for writing, previewing, and managing notes or documentation.
 
-Each plugin is declared with its GitHub URL and relevant setup instructions in code comments.
-
 ---
 
 ## Highlighted Plugins
@@ -167,6 +164,9 @@ Each plugin is declared with its GitHub URL and relevant setup instructions in c
 
 - **[olivercederborg/poimandres.nvim](https://github.com/olivercederborg/poimandres.nvim)**  
   A visually pleasing theme inspired by blueish tints and tranquil hues.
+
+- **[guruguhangunaratnam/retrogreen.nvim](https://github.com/guruguhangunaratnam/retrogreen.nvim)**  
+  A theme inspired by retro terminals with greenish tints and tranquil hues.
 
 ### Editing Enhancements
 
@@ -274,5 +274,3 @@ Please feel free to open issues for bug reports, feature requests, or general qu
 This configuration is open-sourced under the [MIT License](https://choosealicense.com/licenses/mit/). See the [LICENSE](./LICENSE) file for details.
 
 ---
-
-**Enjoy LazyChode**: a curated, clean, and feature-rich Neovim setup that grows as you do. Happy hacking!

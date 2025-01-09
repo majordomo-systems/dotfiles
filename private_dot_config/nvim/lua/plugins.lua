@@ -428,13 +428,13 @@ return {
   },
   -- ##########################################################################################
   -- Retro Green for (Neo)vim
-  -- https://github.com/guruguhangunaratnam/retro_green.nvim
+  -- https://github.com/guruguhangunaratnam/retrogreen.nvim
   -- {
-  --   'guruguhangunaratnam/retro_green.nvim',
+  --   'guruguhangunaratnam/retrogreen.nvim',
   --   lazy = false,
   --   priority = 1000,
   --   config = function()
-  --     require('retro_green').setup {
+  --     require('retrogreen').setup {
   --       -- leave this setup function empty for default config
   --       -- or refer to the configuration section
   --       -- for configuration options
@@ -447,7 +447,7 @@ return {
   --   end,
   --   -- optionally set the colorscheme within lazy config
   --   init = function()
-  --     vim.cmd("colorscheme retro_green")
+  --     vim.cmd("colorscheme retrogreen")
   --   end
   -- },
   -- ##########################################################################################
