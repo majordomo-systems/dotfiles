@@ -82,7 +82,6 @@ else
 alias cleanup='echo "Unsupported operating system for cleanup"'
 fi
 
-
 # Rebuild
 if [ -f /etc/os-release ]; then
 os_name=$(grep '^NAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
