@@ -32,9 +32,11 @@ eval "$(starship init bash)"
 eval "$(zoxide init bash)"
 
 # Tmuxifier - https://github.com/jimeh/tmuxifier
-# Add $HOME/.tmuxifier/bin to your PATH then initialize
-export PATH="$HOME/.tmuxifier/bin:$PATH"
-eval "$(tmuxifier init -)"
+# 1) Clone tmuxifier repo to $HOME
+# git clone https://github.com/jimeh/tmuxifier.git ~/.tmuxifier
+# 2) Add $HOME/.tmuxifier/bin to your PATH then initialize
+# export PATH="$HOME/.tmuxifier/bin:$PATH"
+# eval "$(tmuxifier init -)"
 
 # Bindings for Bash
 bind '"\e[A": history-search-backward'
