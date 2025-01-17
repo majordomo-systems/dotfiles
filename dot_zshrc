@@ -141,6 +141,9 @@ loadkey() {
 alias sshmaster="ssh admin@192.168.1.226 -t zsh --login"
 alias sshdev=""
 
+# Development
+alias pyenv="python3 -m venv venv && source venv/bin/activate"
+
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
