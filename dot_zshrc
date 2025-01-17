@@ -111,11 +111,11 @@ alias upgrade='echo "Unsupported operating system for upgrade"'
 fi
 
 # Digital Ocean Droplet Aliases
-alias dev="create-dev.sh"
-alias vpn="create-vpn.sh"
+alias dropdev="create-dev.sh"
+alias dropvpn="create-vpn.sh"
 alias droplet="create-droplet.sh"
-alias vdelete="delete-vpn.sh"
-alias ddelete="delete-droplets.sh"
+alias vpndelete="delete-vpn.sh"
+alias dropdelete="delete-droplets.sh"
 
 # Git Aliases
 alias gs='git status -s'
@@ -126,6 +126,10 @@ alias gd='git diff'
 alias go='git checkout'
 alias gk='gitk --all&'
 alias gx='gitx --all'
+
+# Connections
+alias sshmaster="ssh admin@192.168.1.226 -t zsh --login"
+alias sshdev=""
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
