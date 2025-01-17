@@ -14,6 +14,9 @@ shell-integration = zsh
 clipboard-read = allow
 clipboard-write = allow
 
+window-height = 40
+window-width = 175
+
 # adjust-cell-height = 10%
 # command = /bin/zsh -c "tmux new -A -s work"
 # copy-on-select = true
