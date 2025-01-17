@@ -77,7 +77,7 @@ elif [ "$os_name" = "Ubuntu" ]; then
     alias cleanup='sudo apt-get clean && sudo apt-get autoremove && sudo apt-get --purge autoremove && sudo apt-get remove --purge $(deborphan) && sudo journalctl --vacuum-time=2weeks && rm -rf ~/.cache/thumbnails/*'
 fi
 elif [ "$(uname)" = "Darwin" ]; then
-alias cleanup='echo "Cleanup not configured for macOS"'
+alias cleanup='nix-collect-garbage && nix-store --gc && rm -rf ~/.cache/nix/'
 else
 alias cleanup='echo "Unsupported operating system for cleanup"'
 fi
