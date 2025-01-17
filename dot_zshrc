@@ -127,6 +127,16 @@ alias go='git checkout'
 alias gk='gitk --all&'
 alias gx='gitx --all'
 
+# SSH Agent
+# if [ -z "$SSH_AUTH_SOCK" ] ; then
+    # eval `ssh-agent -s`
+    # ssh-add ~/.ssh/<NAME OF YOUR PRIVATE KEY>
+# fi
+loadkey() {
+    eval "$(ssh-agent -s)"
+    ssh-add ~/.ssh/"${1}_key"
+}
+
 # Connections
 alias sshmaster="ssh admin@192.168.1.226 -t zsh --login"
 alias sshdev=""
