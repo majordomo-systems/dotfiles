@@ -105,7 +105,7 @@ elif [ "$os_name" = "Ubuntu" ]; then
     alias upgrade='sudo apt -y update && sudo apt -y upgrade'
 fi
 elif [ "$(uname)" = "Darwin" ]; then
-alias upgrade='nix-channel --update && darwin-rebuild switch --flake .'
+alias upgrade='nix-channel --update && cp ~/.config/nix-flakes/system/macos/flake.nix ~/.config/nix/flake.nix && darwin-rebuild switch --flake .'
 else
 alias upgrade='echo "Unsupported operating system for upgrade"'
 fi
