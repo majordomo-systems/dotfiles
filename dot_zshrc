@@ -137,6 +137,45 @@ loadkey() {
     ssh-add ~/.ssh/"${1}_key"
 }
 
+# Flakes
+copy_flake() {
+  local flake_path=~/.config/nix-flakes/$1/flake.nix
+  if [ -f "$flake_path" ]; then
+    cp "$flake_path" ./flake.nix
+    echo "Flake '$1' copied to the current directory as 'flake.nix'."
+  else
+    echo "Flake '$1' not found or does not contain a flake.nix file."
+  fi
+}
+
+use_flake() {
+  local flake_path=~/.config/nix-flakes/$1/flake.nix
+  if [ -f "$flake_path" ]; then
+    # Copy the flake.nix to the current directory
+    cp "$flake_path" ./flake.nix
+    echo "Flake '$1' copied to the current directory as 'flake.nix'."
+
+    # Create or update .envrc with the flake.nix reference
+    echo "use flake ./flake.nix" > .envrc
+    echo ".envrc updated with 'use flake ./flake.nix'."
+
+    # Allow direnv to load the environment
+    direnv allow
+    echo "direnv is now active for this flake."
+  else
+    echo "Flake '$1' not found or does not contain a flake.nix file."
+  fi
+}
+
+flake_shell() {
+  local flake_path=~/.config/nix-flakes/$1
+  if [ -d "$flake_path" ] && [ -f "$flake_path/flake.nix" ]; then
+    nix develop "$flake_path"
+  else
+    echo "Flake '$1' not found or does not contain a flake.nix file."
+  fi
+}
+
 # Connections
 alias sshmaster="ssh admin@192.168.1.226 -t zsh --login"
 alias sshdev=""
