@@ -111,7 +111,7 @@ os_name=$(grep '^NAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
 if [ "$os_name" = "NixOS" ]; then
     alias cleanup='sudo nix-collect-garbage --delete-older-than 1d && sudo nix-collect-garbage -d && sudo rm -rf /nix/var/nix/gcroots/auto/* && nix-env --delete-generations old && nix-store --optimise && sudo nixos-rebuild boot'
 elif [ "$os_name" = "Ubuntu" ]; then
-    alias cleanup='nix-store --gc && nix-env --delete-generations old && sudo nix-collect-garbage --delete-old && sudo nix-collect-garbage && sudo rm -rf /nix/var/log/* && find /nix/store -xtype l -delete && nix-store --optimise && sudo apt-get clean && sudo apt-get autoremove && sudo apt-get --purge autoremove && sudo apt-get remove --purge $(deborphan) && sudo journalctl --vacuum-time=2weeks && rm -rf ~/.cache/thumbnails/*'
+    alias cleanup='nix-store --gc && nix-env --delete-generations old && sudo nix-collect-garbage --delete-old && sudo rm -rf /nix/var/log/* && find /nix/store -xtype l -delete && nix-store --optimise && sudo apt-get clean && sudo apt-get autoremove && sudo apt-get --purge autoremove && sudo apt-get remove --purge $(deborphan) && sudo journalctl --vacuum-time=2weeks && rm -rf ~/.cache/thumbnails/*'
 fi
 elif [ "$(uname)" = "Darwin" ]; then
 alias cleanup='nix-collect-garbage && nix-store --gc && rm -rf ~/.cache/nix/'
