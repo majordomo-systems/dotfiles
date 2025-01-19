@@ -23,10 +23,10 @@
   outputs = { nixpkgs, home-manager, catppuccin, ... }:
     let
       # Adjust to match platform, for instance x86_64-linux or aarch64-linux.
-      system = "aarch64-linux";
+      system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
     in {
-      homeConfigurations."admin" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."administrator" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
         modules = [
@@ -46,8 +46,8 @@
             };
             # ##################################################################################### #
             # Home Manager needs a bit of information about you and the paths it should manage.
-            home.username = "admin";
-            home.homeDirectory = "/home/admin";
+            home.username = "administrator";
+            home.homeDirectory = "/home/administrator";
             # ##################################################################################### #
             # This value determines the Home Manager release that your configuration is
             # compatible with. This helps avoid breakage when a new Home Manager release
@@ -103,6 +103,8 @@
               zsh
               zsh-vi-mode
               nushell
+              neovim
+              chezmoi
               gcc
               gnumake
               sshs
@@ -118,20 +120,14 @@
               wget
               curl
               ripgrep
+              zoxide
               git
               gh
               lazygit
-              # docker
-              # docker-compose
-              # kubernetes
-              # lazydocker
+              lazydocker
               tldr
               xclip
               portal
-
-              # EXTENDED SYSTEM
-              neovim
-              chezmoi
               starship
               catppuccin
               imagemagick
@@ -140,7 +136,6 @@
               tmate
               yazi
               navi
-              llm
               gdu
               bottom
               tldr
@@ -150,33 +145,38 @@
               zip
               gzip
               unzip
-              zoxide
               neofetch
               trash-cli
               speedtest-cli
-              openvpn
               ntp
               ctop
               htop
               btop
               glow
 
-              # WORKSTATION
-              gnome-tweaks
-              gnome-remote-desktop
-              gnome-extension-manager
-              gnomeExtensions.quick-settings-tweaker
-              gnomeExtensions.quick-settings-audio-panel
-              gnomeExtensions.privacy-settings-menu
-              gnomeExtensions.dash-to-panel
-              gnomeExtensions.quake-terminal
-              gnomeExtensions.alphabetical-app-grid
-              gnomeExtensions.clipboard-indicator
-              gnomeExtensions.auto-move-windows
-              gnomeExtensions.forge
-              gnomeExtensions.space-bar
-              gnomeExtensions.easy-docker-containers
-              gnomeExtensions.transparent-window-moving
+              # EXTENDED SYSTEM
+              # llm
+              # openvpn
+              # docker
+              # docker-compose
+              # kubernetes
+
+              # LINUX WORKSTATION
+              # gnome-tweaks
+              # gnome-remote-desktop
+              # gnome-extension-manager
+              # gnomeExtensions.quick-settings-tweaker
+              # gnomeExtensions.quick-settings-audio-panel
+              # gnomeExtensions.privacy-settings-menu
+              # gnomeExtensions.dash-to-panel
+              # gnomeExtensions.quake-terminal
+              # gnomeExtensions.alphabetical-app-grid
+              # gnomeExtensions.clipboard-indicator
+              # gnomeExtensions.auto-move-windows
+              # gnomeExtensions.forge
+              # gnomeExtensions.space-bar
+              # gnomeExtensions.easy-docker-containers
+              # gnomeExtensions.transparent-window-moving
               # gnomeExtensions.gsconnect
               # gnomeExtensions.pano
               # gnomeExtensions.blur-my-shell
@@ -259,9 +259,6 @@
             home.sessionVariables = {
               # EDITOR = "emacs";
             };
-            # ##################################################################################### #
-            # Start the Docker Daemon
-            # virtualisation.docker.enable = true;
             # ##################################################################################### #
             # Let Home Manager install and manage itself.
             programs.home-manager.enable = true;
