@@ -11,6 +11,15 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
+# Source profile and zsh-vi-mode if running on Ubuntu
+if [ -f /etc/os-release ]; then
+    os_name=$(grep '^NAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
+    if [ "$os_name" = "Ubuntu" ]; then
+        source ~/.profile
+        source /nix/store/*zsh-vi-mode*/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+    fi
+fi
+
 # --- setup fzf ---
 # fzf key bindings and fuzzy completion
 eval "$(fzf --zsh)"
