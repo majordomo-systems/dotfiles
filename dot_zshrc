@@ -83,7 +83,7 @@ os_name=$(grep '^NAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
 if [ "$os_name" = "NixOS" ]; then
     alias rebuild='sudo nixos-rebuild switch'
 elif [ "$os_name" = "Ubuntu" ]; then
-    alias rebuild='nix run nixpkgs#home-manager -- switch'
+    alias rebuild='nix flake update --flake ~/.config/nix/flake.nix && nix build .#homeConfigurations.administrator.activationPackage && nix run .#homeConfigurations.administrator.activationPackage && sudo apt -y update && sudo apt -y upgrade'
 fi
 elif [ "$(uname)" = "Darwin" ]; then
 alias rebuild='cp ~/.config/nix-flakes/system/macos/flake.nix ~/.config/nix/flake.nix && darwin-rebuild switch --flake ~/.config/nix/'
@@ -97,7 +97,7 @@ os_name=$(grep '^NAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
 if [ "$os_name" = "NixOS" ]; then
     alias upgrade='sudo nix-channel --update && sudo nixos-rebuild switch --upgrade'
 elif [ "$os_name" = "Ubuntu" ]; then
-    alias upgrade='sudo apt -y update && sudo apt -y upgrade'
+    alias upgrade='nix flake update --flake ~/.config/nix/flake.nix && nix build .#homeConfigurations.administrator.activationPackage && nix run .#homeConfigurations.administrator.activationPackage && sudo apt -y update && sudo apt -y upgrade'
 fi
 elif [ "$(uname)" = "Darwin" ]; then
 alias upgrade='nix-channel --update && cp ~/.config/nix-flakes/system/macos/flake.nix ~/.config/nix/flake.nix && darwin-rebuild switch --flake ~/.config/nix/'
@@ -111,7 +111,7 @@ os_name=$(grep '^NAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
 if [ "$os_name" = "NixOS" ]; then
     alias cleanup='sudo nix-collect-garbage --delete-older-than 1d && sudo nix-collect-garbage -d && sudo rm -rf /nix/var/nix/gcroots/auto/* && nix-env --delete-generations old && nix-store --optimise && sudo nixos-rebuild boot'
 elif [ "$os_name" = "Ubuntu" ]; then
-    alias cleanup='sudo apt-get clean && sudo apt-get autoremove && sudo apt-get --purge autoremove && sudo apt-get remove --purge $(deborphan) && sudo journalctl --vacuum-time=2weeks && rm -rf ~/.cache/thumbnails/*'
+    alias cleanup='nix-store --gc && nix-env --delete-generations old && sudo nix-collect-garbage --delete-old && sudo nix-collect-garbage && sudo rm -rf /nix/var/log/* && find /nix/store -xtype l -delete && nix-store --optimise && sudo apt-get clean && sudo apt-get autoremove && sudo apt-get --purge autoremove && sudo apt-get remove --purge $(deborphan) && sudo journalctl --vacuum-time=2weeks && rm -rf ~/.cache/thumbnails/*'
 fi
 elif [ "$(uname)" = "Darwin" ]; then
 alias cleanup='nix-collect-garbage && nix-store --gc && rm -rf ~/.cache/nix/'
