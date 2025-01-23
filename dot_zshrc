@@ -83,7 +83,7 @@ os_name=$(grep '^NAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
 if [ "$os_name" = "NixOS" ]; then
     alias rebuild='sudo nixos-rebuild switch'
 elif [ "$os_name" = "Ubuntu" ]; then
-    alias rebuild='nix flake update --flake ~/.config/nix/ && nix build .#homeConfigurations.administrator.activationPackage && nix run .#homeConfigurations.administrator.activationPackage && sudo apt -y update && sudo apt -y upgrade'
+    alias rebuild='nix flake update --flake ~/.config/nix/flake.nix && nix build .#homeConfigurations.administrator.activationPackage && nix run .#homeConfigurations.administrator.activationPackage && sudo apt -y update && sudo apt -y upgrade'
 fi
 elif [ "$(uname)" = "Darwin" ]; then
 alias rebuild='darwin-rebuild switch --flake ~/.config/nix/'
