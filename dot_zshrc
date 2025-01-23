@@ -86,7 +86,7 @@ elif [ "$os_name" = "Ubuntu" ]; then
     alias rebuild='nix flake update --flake ~/.config/nix/ && nix build .#homeConfigurations.administrator.activationPackage && nix run .#homeConfigurations.administrator.activationPackage && sudo apt -y update && sudo apt -y upgrade'
 fi
 elif [ "$(uname)" = "Darwin" ]; then
-alias rebuild='wget -O ~/.config/nix/flake.nix https://raw.githubusercontent.com/majordomo-systems/nixos-configuration/refs/heads/main/flakes/system/macos/flake.nix && darwin-rebuild switch --flake ~/.config/nix/'
+alias rebuild='darwin-rebuild switch --flake ~/.config/nix/'
 else
 alias rebuild='echo "Unsupported operating system for rebuild"'
 fi
@@ -97,10 +97,10 @@ os_name=$(grep '^NAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
 if [ "$os_name" = "NixOS" ]; then
     alias upgrade='sudo nix-channel --update && sudo nixos-rebuild switch --upgrade'
 elif [ "$os_name" = "Ubuntu" ]; then
-    alias upgrade='nix flake update --flake ~/.config/nix/ && nix build .#homeConfigurations.administrator.activationPackage && nix run .#homeConfigurations.administrator.activationPackage && sudo apt -y update && sudo apt -y upgrade'
+    alias upgrade='wget -O ~/.config/nix/flake.nix https://raw.githubusercontent.com/majordomo-systems/nixos-configuration/refs/heads/main/flakes/system/ubuntu/server/flake.nix && nix flake update --flake ~/.config/nix/ && nix build .#homeConfigurations.administrator.activationPackage && nix run .#homeConfigurations.administrator.activationPackage && sudo apt -y update && sudo apt -y upgrade'
 fi
 elif [ "$(uname)" = "Darwin" ]; then
-alias upgrade='nix-channel --update && cp ~/.config/nix-flakes/system/macos/flake.nix ~/.config/nix/flake.nix && darwin-rebuild switch --flake ~/.config/nix/'
+alias upgrade='nix-channel --update && wget -O ~/.config/nix/flake.nix https://raw.githubusercontent.com/majordomo-systems/nixos-configuration/refs/heads/main/flakes/system/macos/flake.nix && darwin-rebuild switch --flake ~/.config/nix/'
 else
 alias upgrade='echo "Unsupported operating system for upgrade"'
 fi
