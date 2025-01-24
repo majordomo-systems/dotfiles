@@ -900,4 +900,13 @@ return {
     },
   },
   -- ##########################################################################################
+  -- typr.nvim - A typing tutor with beautiful dashboard.
+  -- https://github.com/nvzone/typr
+  {
+    "nvzone/typr",
+      dependencies = "nvzone/volt",
+      opts = {},
+      cmd = { "Typr", "TyprStats" },
+  },
+  -- ##########################################################################################
 }
