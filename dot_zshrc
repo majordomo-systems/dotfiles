@@ -209,3 +209,84 @@ export SAVEHIST=$HISTSIZE
 HISTTIMEFORMAT="%Y-%m-%d %T "
 HISTCONTROL=ignoreboth
 
+################################################################################################
+# sudo-command-line plugin for zsh: press Esc twice to add sudo to your last command
+# based on: ohmyzsh.sudo.plugin.zsh - https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/sudo/README.md
+################################################################################################
+
+__sudo-replace-buffer() {
+  local old=$1 new=$2 space=${2:+ }
+
+  # If the cursor is within the $old text, replace it and reposition the cursor.
+  if [[ $CURSOR -le ${#old} ]]; then
+    BUFFER="${new}${space}${BUFFER#$old }"
+    CURSOR=${#new}
+  else
+    # Otherwise, replace $old with $new in the text before the cursor.
+    LBUFFER="${new}${space}${LBUFFER#$old }"
+  fi
+}
+
+sudo-command-line() {
+  # If the command line is empty, use the last command from history.
+  [[ -z $BUFFER ]] && LBUFFER="$(fc -ln -1)"
+
+  # Save any leading whitespace.
+  local WHITESPACE=""
+  if [[ ${LBUFFER:0:1} = " " ]]; then
+    WHITESPACE=" "
+    LBUFFER="${LBUFFER:1}"
+  fi
+
+  {
+    # If SUDO_EDITOR or VISUAL is set, use that as the editor; otherwise, use EDITOR.
+    local EDITOR=${SUDO_EDITOR:-${VISUAL:-$EDITOR}}
+
+    # If no editor is set, simply toggle the sudo prefix.
+    if [[ -z "$EDITOR" ]]; then
+      case "$BUFFER" in
+        sudo\ -e\ *) __sudo-replace-buffer "sudo -e" "" ;;
+        sudo\ *) __sudo-replace-buffer "sudo" "" ;;
+        *) LBUFFER="sudo $LBUFFER" ;;
+      esac
+      return
+    fi
+
+    # Get the first word of the typed command.
+    local cmd="${${(Az)BUFFER}[1]}"
+    # Resolve any alias for that command.
+    local realcmd="${${(Az)aliases[$cmd]}[1]:-$cmd}"
+    # Get the actual editor command (ignoring any arguments).
+    local editorcmd="${${(Az)EDITOR}[1]}"
+
+    # If the command is (or aliases to) the editor, switch to sudo -e.
+    if [[ "$realcmd" = (\$EDITOR|$editorcmd|${editorcmd:c}) \
+       || "${realcmd:c}" = ($editorcmd|${editorcmd:c}) ]] \
+       || builtin which -a "$realcmd" | command grep -Fx -q "$editorcmd"; then
+      __sudo-replace-buffer "$cmd" "sudo -e"
+      return
+    fi
+
+    # Otherwise, check if the command line starts with the editor or sudo variants.
+    case "$BUFFER" in
+      $editorcmd\ *) __sudo-replace-buffer "$editorcmd" "sudo -e" ;;
+      \$EDITOR\ *) __sudo-replace-buffer '$EDITOR' "sudo -e" ;;
+      sudo\ -e\ *) __sudo-replace-buffer "sudo -e" "$EDITOR" ;;
+      sudo\ *) __sudo-replace-buffer "sudo" "" ;;
+      *) LBUFFER="sudo $LBUFFER" ;;
+    esac
+  } always {
+    # Reattach any leading whitespace.
+    LBUFFER="${WHITESPACE}${LBUFFER}"
+    # Refresh the display (useful if you have zsh-syntax-highlighting).
+    zle && zle redisplay
+  }
+}
+
+# Register the widget with ZLE.
+zle -N sudo-command-line
+
+# Bind the widget to double-escape in common keymaps.
+bindkey -M emacs '\e\e' sudo-command-line
+bindkey -M vicmd '\e\e' sudo-command-line
+bindkey -M viins '\e\e' sudo-command-line
